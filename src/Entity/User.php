@@ -3,8 +3,10 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
+ * @UniqueEntity("email")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
 class User
@@ -27,7 +29,6 @@ class User
     private $lastname;
 
     /**
-     * @UniqueEntity("email")
      * @ORM\Column(type="string", length=255)
      */
     private $email;
