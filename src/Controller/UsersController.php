@@ -2,8 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use FOS\RestBundle\Controller\Annotations as Rest;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use FOS\RestBundle\Controller\FOSRestController;
 
@@ -32,9 +37,11 @@ class UsersController extends FOSRestController
 
 
     private $userRepository;
-    public function __construct(UserRepository $userRepository)
+    private $em;
+    public function __construct(UserRepository $userRepository, EntityManagerInterface $em)
     {
         $this->userRepository = $userRepository;
+        $this->em = $em;
     }
 
     public function getUsersAction()
@@ -47,10 +54,24 @@ class UsersController extends FOSRestController
         $user = $this->userRepository->find($id);
         return $this->view($user);
     } // "get_user"             [GET] /users/{id}
-    public function postUsersAction()
-    {} // "post_users"           [POST] /users
-    public function putUserAction($id)
-    {} // "put_user"             [PUT] /users/{id}
+
+    /**
+     * @Rest\Post("/users")
+     * @ParamConverter("user", converter="fos_rest.request_body")
+     */
+    public function postUsersAction(User $user)
+    {
+        $this->em->persist($user);
+        $this->em->flush();
+        return $this->view($user);
+    } // "post_users"           [POST] /users
+    public function putUserAction(Request $request, int $id, User $user)
+    {
+        $request->get('firstname');
+        $this->em->persist($user);
+        $this->em->flush();
+        return $this->view($user);
+    } // "put_user"             [PUT] /users/{id}
     public function deleteUserAction($id)
     {} // "delete_user"          [DELETE] /users/{id}
 
