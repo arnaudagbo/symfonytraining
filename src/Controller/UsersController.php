@@ -65,12 +65,32 @@ class UsersController extends FOSRestController
         $this->em->flush();
         return $this->view($user);
     } // "post_users"           [POST] /users
-    public function putUserAction(Request $request, int $id, User $user)
+    public function putUserAction(Request $request, int $id)
     {
-        $request->get('firstname');
-        $this->em->persist($user);
-        $this->em->flush();
-        return $this->view($user);
+        $user = $this->userRepository->find($id);
+
+        if (true) {
+            $firstname = $request->get('firstname');
+            $lastname = $request->get('lastname');
+            $email = $request->get('email');
+
+            if (isset($firstname)) {
+                $user->setFirstname($firstname);
+            }
+
+            if (isset($lastname)) {
+                $user->setLastname($lastname);
+            }
+
+            if (isset($email)) {
+                $user->setEmail($email);
+            }
+
+            $this->em->persist($user);
+            $this->em->flush();
+        }
+            return $this->view($user);
+
     } // "put_user"             [PUT] /users/{id}
     public function deleteUserAction($id)
     {} // "delete_user"          [DELETE] /users/{id}
