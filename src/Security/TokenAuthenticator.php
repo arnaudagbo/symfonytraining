@@ -8,9 +8,6 @@ use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-
-
-
 class TokenAuthenticator extends AbstractGuardAuthenticator
 {
     /**
@@ -27,20 +24,18 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     public function getCredentials(Request $request)
     {
         return array(
-            'token'    => $request->headers->get('AUTH-TOKEN'),
+            'token'	=> $request->headers->get('AUTH-TOKEN'),
         );
     }
-    public function    getUser($credentials, UserProviderInterface    $userProvider)
+    public function	getUser($credentials, UserProviderInterface	$userProvider)
     {
-        $apiKey    =$credentials['token'];
-        if(null    ===    $apiKey) {
+        $apiKey	= $credentials['token'];
+        if(null	===	$apiKey) {
             return;
         }
         // if a User object, checkCredentials() is called
-        return    $userProvider->loadUserByUsername($apiKey);
+        return	$userProvider->loadUserByUsername($apiKey);
     }
-
-
     public function checkCredentials($credentials, UserInterface $user)
     {
         // check credentials - e.g. make sure the password is valid
@@ -53,13 +48,11 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
         // on success, let the request continue
         return null;
     }
-
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
         $data = array('message' => strtr($exception->getMessageKey(), $exception->getMessageData()));
         return new JsonResponse($data, Response::HTTP_FORBIDDEN);
     }
-
     /**
      * Called when authentication is needed, but it's not sent
      */
@@ -72,5 +65,4 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     {
         return false;
     }
-
 }
