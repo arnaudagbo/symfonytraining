@@ -77,9 +77,15 @@ class UsersController extends FOSRestController
         return $this->view($user);
     }
     // "put_user"             [PUT] /users/{id}
-    public function	deleteUserAction($id)
+    public function	deleteUserAction(User $user)
     {
-        $user = $this->userRepository->find($id);
+
+       $articles = $user->getArticles();
+       foreach ($articles as $article)
+       {
+           $article->setUser(null);
+       }
+
         $this->em->remove($user);
         $this->em->flush();
     }

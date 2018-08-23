@@ -59,13 +59,43 @@ class ArticlesController extends FOSRestController
     }
 
     /**
-     * @Rest\View(serializerGroups={"article"})
+     * @Rest\View(serializerGroups={"articles"})
      */
-    public function	deleteArtcticleAction($id)
+    public function putArticleAction(int $id, Request $request)
+    {
+        $title = $request->get('title');
+        $content = $request->get('content');
+        $article = $this->articleRepository->find($id);
+        if ($article->getUser() == $this->getUser() or $this->isGranted('ROLE_ADMIN')) {
+            if ($title) {
+                $article->setTitle($title);
+            }
+            if ($content) {
+                $article->setContent($content);
+            }
+        }
+        $this->em->persist($article);
+        $this->em->flush();
+        return $this->view($article);
+    }
+
+
+    /**
+     * @Rest\View(serializerGroups={"articles"})
+     */
+    public function	deleteArticleAction($id)
     {
         $article = $this->articleRepository->find($id);
-        $this->em->remove($article);
-        $this->em->flush();
+
+        if ($article->getUser() == $this->getUser() or $this->isGranted('ROLE_ADMIN')) {
+
+            $article->setUser(null);
+            $this->em->remove($article);
+            $this->em->flush();
+        }
+        else {
+            return $this->view("NOOOOOO");
+        }
     }
 
 }

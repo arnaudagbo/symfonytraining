@@ -28,9 +28,14 @@ class Article
      */
     private $content;
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="articles", cascade={"all"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="articles")
      */
     private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="articles")
+     */
+    private $userId;
     public function getId(): ?int
     {
         return $this->id;
@@ -60,6 +65,18 @@ class Article
     public function setUser(?User $user): self
     {
         $this->user = $user;
+        return $this;
+    }
+
+    public function getUserId(): ?User
+    {
+        return $this->userId;
+    }
+
+    public function setUserId(?User $userId): self
+    {
+        $this->userId = $userId;
+
         return $this;
     }
 }
