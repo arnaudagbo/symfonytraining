@@ -32,10 +32,7 @@ class Article
      */
     private $user;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="articles")
-     */
-    private $userId;
+
     public function getId(): ?int
     {
         return $this->id;
